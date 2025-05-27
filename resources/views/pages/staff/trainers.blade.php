@@ -290,16 +290,6 @@
                                                       @endforeach
                                                   </select>
                                                 </div>
-                                                {{-- <div class="form-group">
-                                                    <label for="exampleFormControlSelect1">Specialties <span class="text-danger">*</span></label>
-                                                    <select name="specialties[]" class="form-control " id="multiple-select-field"  data-placeholder="Choose specealties" multiple>
-                                                      <option value="">Specialty</option>
-                                                        @foreach ($specialties as $spec)
-                                                          <option value="{{$spec->id}}">{{$spec->name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                  </div> --}}
-
                                                 <div class="form-group">
                                                   <label>Specialties <span class="text-danger">*</span></label>
                                                   <select 

@@ -23,14 +23,18 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'firstname',
+        'middlename',
         'lastname',
+        'gender',
         'email',
+        'phone',
         'password',
         'address',
         'city',
         'country',
         'postal',
-        'about'
+        'about',
+        'avatar'
     ];
 
     /**
@@ -76,4 +80,15 @@ class User extends Authenticatable
             ->logOnlyDirty()              // Log only if data actually changed
             ->dontSubmitEmptyLogs();      // Avoid logging if nothing was updated
     }
+
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? asset($this->avatar) : asset('img/default-avatar.png');
+    }
+
+    public function trainer() { return $this->hasOne(Trainer::class); }
+    public function branchManager() { return $this->hasOne(BranchManager::class); }
+    public function receptionist() { return $this->hasOne(Receptionist::class); }
+    
+
 }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MembershipPlanController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SpecialtyController;
@@ -34,10 +36,13 @@ Route::get('/', function () {return redirect('/dashboard');})->middleware('auth'
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('roles',RoleController::class);
 	Route::resource('permissions',PermissionController::class);
+	Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
 	Route::resource('users',UserController::class);
 	Route::resource('trainers',TrainerController::class);
 	Route::resource('branches',BranchController::class);
 	Route::resource('specialties',SpecialtyController::class);
+	Route::resource('members',MemberController::class);
+	Route::resource('membership-plans',MembershipPlanController::class);
 
 
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

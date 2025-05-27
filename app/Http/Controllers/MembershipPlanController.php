@@ -1,65 +1,89 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\MembershipPlan;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 
 class MembershipPlanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        try {
+            $membershipPlans = MembershipPlan::paginate(10);
+            return view('pages.membership_plans.index', compact('membershipPlans'));
+        } catch (\Throwable $th) {
+            Toastr::error($th->getMessage(),'Failed');
+            return redirect()->back();
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Show form to create new plan
     public function create()
     {
-        //
+        return view('pages.membership_plans.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store new plan
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'                  => 'required|string|max:255',
+            'price'                 => 'required|numeric|min:0',
+            'duration_days'         => 'required|integer|min:1',
+            // 'includes_classes'      => 'required|boolean',
+            // 'max_classes_per_week'  => 'nullable|integer|min:0',
+        ]);
+
+        MembershipPlan::create($validated);
+
+        return redirect()->route('membership-plans.index')->with('success', 'Membership plan created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(MembershipPlan $membershipPlan)
-    {
-        //
+    public function show($id)
+    {   
+        try {
+            $membershipPlan = MembershipPlan::findOrFail($id);
+            return view('membership_plans.show', compact('membershipPlan'));
+        } catch (\Throwable $th) {
+            Toastr::error($th->getMessage(),'Error');
+            return redirect()->back();
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Show edit form
     public function edit(MembershipPlan $membershipPlan)
     {
-        //
+        return view('membership_plans.edit', compact('membershipPlan'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Update plan
     public function update(Request $request, MembershipPlan $membershipPlan)
     {
-        //
+        $validated = $request->validate([
+            'name'                  => 'required|string|max:255',
+            'price'                 => 'required|numeric|min:0',
+            'duration_days'         => 'required|integer|min:1',
+            // 'includes_classes'      => 'required|boolean',
+            // 'max_classes_per_week'  => 'nullable|integer|min:0',
+        ]);
+
+        $membershipPlan->update($validated);
+
+        return redirect()->route('membership-plans.index')->with('success', 'Membership plan updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MembershipPlan $membershipPlan)
+    // Delete plan
+    public function destroy($id)
     {
-        //
+        try {
+            $membershipPlan = MembershipPlan::findOrFail($id);
+            $membershipPlan->delete();
+            Toastr::success('Deleted','Success');
+        } catch (\Throwable $th) {
+            Toastr::error($th->getMessage(),'Error');
+        }
+
+        return redirect()->back();
     }
 }

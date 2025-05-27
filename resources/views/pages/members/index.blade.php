@@ -8,10 +8,10 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0 ">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h6>Users table</h6>
+                            <h6>Members table</h6>
                             <a class="font-weight-bold text-xs btn bg-gradient-success  " style="cursor: pointer"
                                 data-bs-target="#addmodal" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Add user">
-                                <span>Add User</span>
+                                <span>Add Member</span>
                             </a>
                         </div>
                         
@@ -30,7 +30,7 @@
                             </form>
                           </div>
 
-                          <div class="col-md-6 ">
+                          {{-- <div class="col-md-6 ">
                             <form action="">
                               <div class="col-md-12 d-flex align-items-start gap-2 ">
                                   <select name="roleFilter" class="form-control" id="exampleFormControlSelect1">
@@ -43,8 +43,9 @@
                                   </button>
                               </div>
                             </form>
-                          </div>
+                          </div> --}}
                         </div>
+
                     </div>
                     
                     <div class="card-body px-0 pt-0 pb-2">
@@ -54,15 +55,15 @@
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Name</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        <th class="text-uppercase border text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Gender</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Phone</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Role</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Membership</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Status</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Action</th>
                                         {{-- <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -71,34 +72,35 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $index=>$user)
+                                    @foreach ($members as $index=>$member)
                                     <tr>
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
-                                                    <img src={{$user->getAvatarUrlAttribute()}} class="avatar avatar-sm me-3 img-fluid"
+                                                    <img src={{$member->user->getAvatarUrlAttribute()}} class="avatar avatar-sm me-3"
                                                         alt="user1">
                                                 </div>
                                                 <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{$user->firstname. ' '. $user->middlename . ' '. $user->lastname}} 
-                                                        @if (Auth::user()->id == $user->id)
+                                                    <h6 class="mb-0 text-sm">{{$member->user->firstname. ' '. $member->user->middlename . ' '. $member->user->lastname}} 
+                                                        @if (Auth::user()->id == $member->user->id)
                                                             <span class="badge badge-sm bg-gradient-info">you</span>
                                                         @endif
                                                     </h6>
-                                                    <p class="text-xs text-secondary mb-0">{{$user->email}}</p>
+                                                    <p class="text-xs text-secondary mb-0">{{$member->user->email}}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
-                                          <p class="text-xs font-weight-bold mb-0">{{$user->phone}}</p>
-                                          {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
+                                        <td class="border">
+                                            <p class="text-xs font-weight-bold mb-0">{{$member->user->gender}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{$user->getRoleNames()->first()}}</p>
-                                            {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
+                                          <p class="text-xs font-weight-bold mb-0">{{$member->user->phone}}</p>
+                                        </td>
+                                        <td>
+                                          <p class="text-xs font-weight-bold mb-0">{{$member->membershipPlan->name}}</p>
                                         </td>
                                         <td class="align-middle text-center text-sm ">
-                                            @if ($user->status)
+                                            @if ($member->status)
                                             <span class="badge badge-sm bg-gradient-success">
                                                  Active
                                             </span>
@@ -113,17 +115,17 @@
                                         </td> --}}
                                         <td class="  align-items-center justify-content-center d-flex gap-4">
                                             <a class="font-weight-bold text-xs btn bg-gradient-secondary  " style="cursor: pointer"
-                                                data-bs-target="#editmodal{{$user->id}}" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Edit user">
+                                                data-bs-target="#editmodal{{$member->id}}" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Edit user">
                                                 <span>Edit</span>
                                             </a>
                                             <a class="font-weight-bold text-xs btn bg-gradient-primary d-flex align-items-center  " style="cursor: pointer"
-                                                data-bs-target="#deletemodal{{$user->id}}" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Edit user">
+                                                data-bs-target="#deletemodal{{$member->id}}" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Edit user">
                                                 <i style="color: white" class="ni ni-fat-remove  text-xs opacity-10"></i>
                                                 <span>Delete</span>
                                             </a>
                                         </td>
                                          {{-- edit --}}
-                                         <div class="modal fade" id="editmodal{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                                         <div class="modal fade" id="editmodal{{$member->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
                                           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                             <div class="modal-content">
                                               <div class="modal-body p-0">
@@ -132,7 +134,7 @@
                                                     <h3 class="font-weight-bolder text-dark">Edit User</h3>
                                                   </div>
                                                   <div class="card-body">
-                                                    <form action="{{route('users.update',$user->id)}}" enctype="multipart/form-data" method="post" role="form text-left">
+                                                    <form action="{{route('users.update',$member->id)}}" enctype="multipart/form-data" method="post" role="form text-left">
                                                       @method("POST")
                                                       @csrf
                                                           {{-- Avatar Upload --}}
@@ -140,29 +142,29 @@
                                                             <label for="avatar" class="form-label">Avatar <span class="text-danger">*</span></label>
                                                           
                                                             {{-- Avatar Upload Box --}}
-                                                            <div class="avatar-upload-box position-relative" onclick="document.getElementById('avatar{{ $user->id }}').click();">
+                                                            <div class="avatar-upload-box position-relative" onclick="document.getElementById('avatar{{ $member->id }}').click();">
                                                               <img
-                                                                id="avatar-preview{{ $user->id }}"
-                                                                src="{{$user->getAvatarUrlAttribute()}}"
+                                                                id="avatar-preview{{ $member->id }}"
+                                                                src="{{ $member->user->getAvatarUrlAttribute() }}"
                                                                 alt="Avatar Preview"
                                                                 class="avatar-preview"
-                                                                style="{{ $user->avatar ? '' : 'display: none;' }}"
+                                                                style="{{ $member->avatar ? '' : 'display: none;' }}"
                                                               >
                                                           
                                                               {{-- Plus or Edit icon --}}
-                                                              <div id="avatar-placeholder{{ $user->id }}" class="avatar-placeholder text-primary">
-                                                                <i class="fas {{ $user->avatar ? 'fa-pen bg-opacity-25' : 'fa-plus' }}"></i>
+                                                              <div id="avatar-placeholder{{ $member->id }}" class="avatar-placeholder text-primary">
+                                                                <i class="fas {{ $member->avatar ? 'fa-pen bg-opacity-25' : 'fa-plus' }}"></i>
                                                               </div>
                                                             </div>
                                                           
                                                             {{-- Hidden File Input --}}
                                                             <input
                                                               type="file"
-                                                              id="avatar{{ $user->id }}" 
+                                                              id="avatar{{ $member->id }}" 
                                                               name="avatar"
                                                               class="d-none"
                                                               accept="image/*"
-                                                              onchange="previewAvatarEdit(event, {{ $user->id }})"
+                                                              onchange="previewAvatar(event, {{ $member->id }})"
                                                             >
                                                           </div>
                                                           
@@ -170,19 +172,19 @@
                                                               <div class=" col-4">
                                                                   <label>Username <span class="text-danger">*</span> </label>
                                                                   <div class="input-group mb-3">
-                                                                    <input type="text" required name="username" value="{{old('username',$user->username)}}"  class="form-control"  placeholder="username" aria-label="permission name" aria-describedby="role name addon">
+                                                                    <input type="text" required name="username" value="{{old('username',$member->username)}}"  class="form-control"  placeholder="username" aria-label="permission name" aria-describedby="role name addon">
                                                                   </div>
                                                               </div>
                                                               <div class=" col-4">
                                                                   <label>Email <span class="text-danger">*</span></label>
                                                                   <div class="input-group mb-3">
-                                                                    <input type="email" required name="email"  class="form-control" value="{{old('email',$user->email)}}"  placeholder="email" aria-label="permission name" aria-describedby="role name addon">
+                                                                    <input type="email" required name="email"  class="form-control" value="{{old('email',$member->email)}}"  placeholder="email" aria-label="permission name" aria-describedby="role name addon">
                                                                   </div>
                                                               </div>
                                                               <div class=" col-4">
                                                                 <label>Phone <span class="text-danger">*</span></label>
                                                                 <div class="input-group mb-3">
-                                                                  <input type="text" required name="phone"  class="form-control" value="{{old('phone',$user->phone)}}"  placeholder="phone number" aria-label="permission name" aria-describedby="role name addon">
+                                                                  <input type="text" required name="phone"  class="form-control" value="{{old('phone',$member->phone)}}"  placeholder="phone number" aria-label="permission name" aria-describedby="role name addon">
                                                                 </div>
                                                             </div>
                                                           </div>
@@ -190,51 +192,43 @@
                                                             <div class="col-md-4">
                                                               <label>First Name</label>
                                                               <div class="input-group mb-3">
-                                                                <input type="text" required name="firstname"  class="form-control" value="{{old('firstname',$user->firstname)}}"  placeholder="first name" aria-label="permission name" aria-describedby="role name addon">
+                                                                <input type="text" required name="firstname"  class="form-control" value="{{old('firstname',$member->firstname)}}"  placeholder="first name" aria-label="permission name" aria-describedby="role name addon">
                                                               </div>
                                                             </div>
                                                             <div class="col-md-4">
                                                               <label>Middle Name</label>
                                                               <div class="input-group mb-3">
-                                                                <input type="text" required name="middlename"  class="form-control" value="{{old('middlename',$user->middlename)}}" placeholder="middle name" aria-label="permission name" aria-describedby="role name addon">
+                                                                <input type="text" required name="middlename"  class="form-control" value="{{old('middlename',$member->middlename)}}" placeholder="middle name" aria-label="permission name" aria-describedby="role name addon">
                                                               </div>
                                                             </div>
                                                             <div class="col-md-4">
                                                               <label>Last Name</label>
                                                               <div class="input-group mb-3">
-                                                                <input type="text" name="lastname"  class="form-control" value="{{old('lastname',$user->lastname)}}"  placeholder="last name" aria-label="permission name" aria-describedby="role name addon">
+                                                                <input type="text" name="lastname"  class="form-control" value="{{old('lastname',$member->lastname)}}"  placeholder="last name" aria-label="permission name" aria-describedby="role name addon">
                                                               </div>
                                                             </div>
                                                           </div>
                                                           {{-- Role Field --}}
-                                                          <div class="row">
+                                                          {{-- <div class="row">
                                                             <div class="form-group col-md-4">
-                                                              <label for="">Gender<span class="text-danger">*</span></label>
-                                                              <select name="gender" class="form-control" required id="">
-                                                                <option value="">Select Gender</option>
-                                                                  <option value="male" @if($user->gender == 'male') selected @endif>Male</option>
-                                                                  <option value="female" @if($user->gender == 'female') selected @endif>Female</option>
-                                                              </select>
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                              <label for="roleSelect{{ $user->id }}">Role <span class="text-danger">*</span></label>
-                                                              <select name="role" class="form-control role-select" required id="roleSelect{{ $user->id }}" data-user-id="{{ $user->id }}">
+                                                              <label for="roleSelect{{ $member->id }}">Role <span class="text-danger">*</span></label>
+                                                              <select name="role" class="form-control role-select" required id="roleSelect{{ $member->id }}" data-user-id="{{ $member->id }}">
                                                                 <option value="">Assign role</option>
                                                                 @foreach ($roles as $role)
-                                                                  <option value="{{ $role->name }}" {{ $user->getRoleNames()->first() == $role->name ? 'selected' : '' }}>
+                                                                  <option value="{{ $role->name }}" {{ $member->getRoleNames()->first() == $role->name ? 'selected' : '' }}>
                                                                     {{ $role->name }}
                                                                   </option>
                                                                 @endforeach
                                                               </select>
-                                                            </div>
+                                                            </div> --}}
                                                             
                                                             {{-- Branch Field --}}
-                                                            <div class="form-group branch-field col-md-4" id="branchField{{ $user->id }}" style="display: none;">
-                                                              <label for="branchSelect{{ $user->id }}">Branch<span class="text-danger">*</span></label>
-                                                              <select name="branch_id" class="form-control" id="branchSelect{{ $user->id }}">
+                                                            <div class="form-group branch-field col-md-4" id="branchField{{ $member->id }}" style="display: none;">
+                                                              <label for="branchSelect{{ $member->id }}">Branch</label>
+                                                              <select name="branch_id" class="form-control" id="branchSelect{{ $member->id }}">
                                                                 <option value="">Assign Branch</option>
                                                                 @foreach ($branches as $branch)
-                                                                  <option value="{{ $branch->id }}" @if($user->branch_id == $branch->id) selected @endif >
+                                                                  <option value="{{ $branch->id }}" @if($member->branch_id == $branch->id) selected @endif >
                                                                     {{ $branch->name }}
                                                                   </option>
                                                                 @endforeach
@@ -243,11 +237,11 @@
                                                           </div>
 
                                                           {{-- Specialties Field (Trainer Only) --}}
-                                                          <div class="form-group specialties-field" id="specialtiesField{{ $user->id }}" style="display: none;">
+                                                          {{-- <div class="form-group specialties-field" id="specialtiesField{{ $member->id }}" style="display: none;">
                                                             <label>Specialties</label>
                                                             <select
                                                               class="form-control"
-                                                              id="specialtiesSelect{{ $user->id }}"
+                                                              id="specialtiesSelect{{ $member->id }}"
                                                               name="specialties[]"
                                                               multiple
                                                               data-choices
@@ -255,13 +249,13 @@
                                                             >
                                                               @foreach ($specialties as $spec)
                                                                 <option value="{{ $spec->id }}"
-                                                                  @if(optional($user->trainer)->specialties && $user->trainer->specialties->contains($spec->id)) selected @endif
+                                                                  @if(optional($member->trainer)->specialties && $member->trainer->specialties->contains($spec->id)) selected @endif
                                                                 >
                                                                   {{ $spec->name }}
                                                                 </option>
                                                               @endforeach
                                                             </select>
-                                                          </div>
+                                                          </div> --}}
 
                                                           <div class="modal-footer">
                                                             <button type="submit" class="btn btn-round bg-primary text-white ">Update</button>
@@ -276,7 +270,7 @@
                                       </div>
 
                                         {{-- delete --}}
-                                        <div class="modal fade " id="deletemodal{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                                        <div class="modal fade " id="deletemodal{{$member->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered  modal-md" role="document">
                                               <div class="modal-content card card-body  ">
                                                 <div class="modal-header">
@@ -285,7 +279,7 @@
                                                     <span aria-hidden="true">×</span>
                                                   </button>
                                                 </div>
-                                                <form action="{{route('users.destroy',$user->id)}}" method="post">
+                                                <form action="{{route('users.destroy',$member->id)}}" method="post">
                                                   @method('DELETE')
                                                   @csrf
                                                   <div class="modal-body ">
@@ -308,7 +302,7 @@
                                 </tbody>
                             </table>
                             <div class="flex justify-center mt-4">
-                                {{ $users->links('components.pagination') }}
+                                {{ $members->links('components.pagination') }}
                             </div>
                             
                             {{-- add --}}
@@ -321,11 +315,11 @@
                                           <h3 class="font-weight-bolder text-dark">Add User</h3>
                                         </div>
                                         <div class="card-body">
-                                          <form action="{{route('users.store')}}" enctype="multipart/form-data" method="post" role="form text-left">
+                                          <form action="{{route('members.store')}}" enctype="multipart/form-data" method="post" role="form text-left">
                                             @method("POST")
                                             @csrf
                                                 {{-- Avatar Upload --}}
-                                                <div class="form-group">
+                                                {{-- <div class="form-group">
                                                   <label for="avatar" class="form-label">Avatar <span class="text-danger">*</span></label>
                                                 
                                                   <div class="avatar-upload-box" onclick="document.getElementById('avatar').click();">
@@ -335,15 +329,49 @@
                                                     </div>
                                                   </div>
                                                   <input 
-                                                    type="file" 
-                                                    id="avatar" 
-                                                    name="avatar" 
-                                                    class="d-none" 
-                                                    accept="image/*" 
+                                                    type="file"
+                                                    id="avatar"
+                                                    name="avatar"
+                                                    class="d-none"
+                                                    accept="image/*"
                                                     onchange="previewAvatar(event)" 
                                                     required
                                                   >
+                                                </div> --}}
+
+                                                {{--  --}}
+                                                <div class="form-group">
+                                                  <label for="avatar" class="form-label">Avatar<span class="text-danger">*</span></label>
+                                                  <div class="avatar-upload-box" onclick="document.getElementById('avatar').click();">
+                                                    <img id="avatar-preview" src="#" alt="Avatar Preview" class="avatar-preview" style="display: none;">
+                                                    <div id="avatar-placeholder" class="avatar-placeholder">
+                                                      <i class="fas fa-plus"></i>
+                                                    </div>
+                                                  </div>
+                                                  <input
+                                                    type="file"
+                                                    id="avatar"
+                                                    name="avatar"
+                                                    class="d-none"
+                                                    accept="image/*"
+                                                    onchange="previewAvatar(event)"
+                                                    required
+                                                  >
+                                                  {{-- <video id="video" autoplay></video><br> --}}
+                                                  {{-- <button type="button" id="capture">Capture</button><br> --}}
                                                 </div>
+
+                                                  <!-- Webcam area -->
+    <!-- File upload fallback -->
+    {{-- <input type="file" id="fileInput" accept="image/*"><br> --}}
+
+    <!-- Submit form -->
+    {{-- <form id="uploadForm" method="POST" action="" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="image_data" id="imageData">
+        <button type="submit">Upload</button>
+    </form> --}}
+
                                                 <div class="row">
                                                     <div class=" col-4">
                                                         <label>Username <span class="text-danger">*</span> </label>
@@ -384,28 +412,29 @@
                                                     </div>
                                                   </div>
                                                 </div>
+                                               
                                                 <div class="row">
                                                   <div class="form-group col-md-4">
-                                                    <label for="">Gender <span class="text-danger">*</span></label>
+                                                    <label for="">Gender<span class="text-danger">*</span></label>
                                                     <select name="gender" class="form-control" required id="">
                                                       <option value="">Select Gender</option>
-                                                        <option value="male">Male</option>
-                                                        <option value="female">Female</option>
+                                                        <option value="male" >Male</option>
+                                                        <option value="female" >Female</option>
                                                     </select>
                                                   </div>
                                                   <div class="form-group col-md-4">
-                                                    <label for="roleSelect">Role <span class="text-danger">*</span></label>
-                                                    <select name="role" class="form-control" required id="roleSelect">
-                                                      <option value="">Assign role</option>
-                                                      @foreach ($roles as $role)
-                                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                                    <label for="membership_plan_id">Membership Plan<span class="text-danger">*</span></label>
+                                                    <select name="membership_plan_id" class="form-control" required id="membership_plan_id">
+                                                      <option value="">Choose plan</option>
+                                                      @foreach ($membershipPlans as $plan)
+                                                        <option value="{{ $plan->id }}">{{ $plan->name }}</option>
                                                       @endforeach
                                                     </select>
                                                   </div>
-                                                  <div class="form-group col-md-4" id="branchField" style="display: none;">
+                                                  <div class="form-group col-md-4" id="" >
                                                     <label for="branchSelect">Branch <span class="text-danger">*</span></label>
                                                     <select name="branch_id" class="form-control" id="branchSelect" >
-                                                      <option value="">Assign Branch</option>
+                                                      <option value="">Select Branch</option>
                                                       @foreach ($branches as $branch)
                                                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                                       @endforeach
@@ -413,20 +442,20 @@
                                                   </div>
                                                 </div>
                                                 {{-- Specialties Field --}}
-                                                <div class="form-group" id="specialtiesField" style="display: none;">
+                                                {{-- <div class="form-group" id="specialtiesField" style="display: none;">
                                                   <label>Specialties </label>
-                                                  <select 
-                                                    class="form-control" style="color: black" 
-                                                    id="choices-multiple-remove-button" 
-                                                    name="specialties[]" 
-                                                    multiple 
-                                                    data-choices 
+                                                  <select
+                                                    class="form-control" style="color: black"
+                                                    id="choices-multiple-remove-button"
+                                                    name="specialties[]"
+                                                    multiple
+                                                    data-choices
                                                     data-choices-removeitem>
                                                     @foreach ($specialties as $spec)
                                                       <option value="{{ $spec->id }}">{{ $spec->name }}</option>
                                                     @endforeach
                                                   </select>
-                                                </div>
+                                                </div> --}}
                                                 <div class="modal-footer">
                                                   <button type="submit" class="btn btn-round bg-primary text-white ">Add</button>
                                                   <button type="reset" data-bs-dismiss="modal" class="btn btn-round bg-secondary text-white ">Cancel</button>
@@ -484,78 +513,19 @@
   .avatar-upload-box .avatar-placeholder {
     position: absolute;
   }
+
+  #preview, #video {
+            width: 300px;
+            height: 225px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+  }
 </style>
 
 
-  {{-- add --}}
-     <script>
-       document.addEventListener('DOMContentLoaded', function () {
-         const roleSelect = document.getElementById('roleSelect');
-         const branchField = document.getElementById('branchField');
-         const specialtiesField = document.getElementById('specialtiesField');
-     
-         function toggleFields() {
-           const role = roleSelect.value.toLowerCase();
-     
-           // Roles that should see the branch field
-           const showBranchRoles = ['trainer', 'branchmanager', 'receptionist'];
-     
-           // Show/hide logic
-           branchField.style.display = showBranchRoles.includes(role) ? 'block' : 'none';
-           specialtiesField.style.display = (role === 'trainer') ? 'block' : 'none';
-         }
-     
-         // Initial check
-         toggleFields();
-     
-         // On change
-         roleSelect.addEventListener('change', toggleFields);
-       });
-     </script>
-
-     {{-- edit --}}
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Initialize Choices.js
-    document.querySelectorAll('[data-choices]').forEach(el => {
-      new Choices(el, {
-        removeItemButton: true,
-      });
-    });
-
-    // Handle show/hide logic per role select
-    document.querySelectorAll('.role-select').forEach(function (roleSelect) {
-      const userId = roleSelect.dataset.userId;
-
-      function toggleFields() {
-        const role = roleSelect.value.toLowerCase();
-        const branchField = document.getElementById('branchField' + userId);
-        const specialtiesField = document.getElementById('specialtiesField' + userId);
-        const branchInput = branchField.querySelector('select, input');
-        // Show branch for all except super admin
-        if (['trainer', 'branchmanager', 'receptionist'].includes(role)) {
-          branchField.style.display = 'block';
-          if (branchInput) branchInput.setAttribute('required', 'required');
-        } else {
-          branchField.style.display = 'none';
-          if (branchInput) branchInput.removeAttribute('required');
-        }
-
-        // Show specialties only for trainer
-        specialtiesField.style.display = (role === 'trainer') ? 'block' : 'none';
-      }
-
-      // Initial check on page load
-      toggleFields();
-
-      // Update on change
-      roleSelect.addEventListener('change', toggleFields);
-    });
-  });
-</script>
-<script>
+{{-- <script>
   // edit
-  function previewAvatarEdit(event, userId) {
+  function previewAvatar(event, userId) {
     const input = event.target;
     const preview = document.getElementById('avatar-preview' + userId);
     const placeholder = document.getElementById('avatar-placeholder' + userId);
@@ -572,7 +542,7 @@
       reader.readAsDataURL(input.files[0]);
     }
   }
-</script>
+</script> --}}
 
 
 
@@ -619,4 +589,49 @@
   }
 </script>
 
+
+<script>
+  const video = document.getElementById('video');
+  const captureBtn = document.getElementById('capture');
+  const preview = document.getElementById('preview');
+  const imageDataInput = document.getElementById('imageData');
+  const fileInput = document.getElementById('fileInput');
+
+  // 1. Start webcam stream
+  navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+          video.srcObject = stream;
+      })
+      .catch(err => {
+          console.error('Camera access denied or not available:', err);
+      });
+
+  // 2. Capture image from webcam
+  captureBtn.addEventListener('click', () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/png');
+
+      preview.src = dataUrl;
+      preview.style.display = 'block';
+      imageDataInput.value = dataUrl;
+  });
+
+  // 3. Handle file input (preview and strip webcam image)
+  fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+              preview.src = e.target.result;
+              preview.style.display = 'block';
+              imageDataInput.value = e.target.result;
+          }
+          reader.readAsDataURL(file);
+      }
+  });
+</script>
 @endsection

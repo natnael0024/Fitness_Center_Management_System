@@ -33,12 +33,6 @@
                 </a>
             </li> --}}
             <li class="nav-item">
-                {{-- <a class="nav-link {{ str_contains(request()->url(), 'user-management') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'user-management']) }}">
-                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-bullet-list-67 text-dark text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">User Management</span>
-                </a> --}}
                 <a class="nav-link {{ Str::contains(request()->url(), ['users', 'roles', 'permissions']) ? 'active' : '' }}" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <div
                     class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -49,8 +43,8 @@
                 <div class="collapse" id="collapseExample">
                     <ul class=" px-6 text-sm ">
                         <li class="nav-item">
-                            <a class=" hover-bg-gray "  href="{{ route('users.index') }}">
-                                <span class="nav-link-text ">Users</span>
+                            <a class=" hover-bg-gray " href="{{ route('users.index') }}">
+                                <span class="nav-link-text ">Staff</span>
                             </a>
                         </li>
                         <li class="nav-item mt-2">
@@ -65,16 +59,19 @@
                         </li>
                     </ul>
                 </div>
-
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('members.*') ? 'active' : '' }}" href="{{ route('members.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        {{-- <i class="ni ni-building text-warning text-sm opacity-10"></i> --}}
+                        <i class="fa-solid fas fa-user-friends text-sm text-success"></i>
+                    </div>
+                    <span class="nav-link-text ms-1 ">Members</span>
+                </a>
             </li>
 
-            <li class="nav-item">
-                {{-- <a class="nav-link {{ str_contains(request()->url(), 'user-management') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'user-management']) }}">
-                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-bullet-list-67 text-dark text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">User Management</span>
-                </a> --}}
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ Str::contains(request()->url(), ['staff']) ? 'active' : '' }}" data-bs-toggle="collapse" href="#staffcollapse" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <div
                     class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -101,7 +98,7 @@
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'branches') == true ? 'active' : '' }}" href="{{ route('branches.index') }}">
                     <div
@@ -109,6 +106,16 @@
                         <i class="ni ni-building text-warning text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Branches</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'membership-plans') == true ? 'active' : '' }}" href="{{ route('membership-plans.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tags text-sm text-success"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Membership Plans</span>
                 </a>
             </li>
 
