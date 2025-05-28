@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description')->nullable();
-            $table->bigInteger( 'is_premium')->nullable();
+            $table->boolean( 'is_premium')->nullable();
             $table->bigInteger('trainer_id')->nullable();
             $table->bigInteger( 'branch_id')->nullable();
             $table->integer( 'capacity')->nullable();
             $table->decimal( 'price',8,2)->nullable();
+            $table->boolean( 'status')->nullable();
             $table->timestamps();
         });
     }

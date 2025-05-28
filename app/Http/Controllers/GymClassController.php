@@ -1,65 +1,96 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\GymClass;
+use App\Models\Trainer;
+use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GymClassController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $classes = GymClass::with('trainer', 'branch')->paginate(10);
+        $branches = Branch::orderBy('name')->get();
+        $trainers = Trainer::get();
+        return view('pages.classes.index', compact('classes','branches','trainers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $trainers = Trainer::with('user')->get();
+        $branches = Branch::all();
+        return view('classes.create', compact('trainers', 'branches'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            // dd($request);
+            $request->validate([
+                'title'       => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'trainer_id'  => 'required|exists:trainers,id',
+                'branch_id'   => 'required|exists:branches,id',
+                'capacity'    => 'integer|min:1',
+                // 'is_premium'  => 'boolean',
+                'price'       => 'nullable|numeric|min:0',
+            ]);
+            $request['is_premium'] = $request->is_premium == 'on' ? true : false;
+
+            GymClass::create($request->all());
+            toastr()->success('Class created successfully');
+            return redirect()->route('classes.index');
+        } catch (\Throwable $e) {
+            toastr()->error('Failed to create class: ' . $e->getMessage());
+            return back()->withInput();
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(GymClass $gymClass)
+    public function edit(GymClass $class)
     {
-        //
+        $trainers = Trainer::with('user')->get();
+        $branches = Branch::all();
+        return view('classes.edit', compact('class', 'trainers', 'branches'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(GymClass $gymClass)
+    public function update(Request $request, GymClass $class)
     {
-        //
+        try {
+            $request->validate([
+                'title'       => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'trainer_id'  => 'required|exists:trainers,id',
+                'branch_id'   => 'required|exists:branches,id',
+                'capacity'    => 'integer|min:1',
+                'is_premium'  => 'boolean',
+                'price'       => 'nullable|numeric|min:0',
+            ]);
+            $request->is_premium = $request->is_premium == 'on' ? true : false;
+            $class->update($request->all());
+            toastr()->success('Class updated successfully');
+            return redirect()->route('classes.index');
+        } catch (\Throwable $e) {
+            toastr()->error('Failed to update class: ' . $e->getMessage());
+            return back()->withInput();
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, GymClass $gymClass)
+    public function destroy(GymClass $class)
     {
-        //
+        try {
+            $class->delete();
+            toastr()->success('Class deleted successfully');
+        } catch (\Throwable $e) {
+            toastr()->error('Failed to delete class: ' . $e->getMessage());
+        }
+
+        return redirect()->route('classes.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(GymClass $gymClass)
+    public function show(GymClass $class)
     {
-        //
+        return view('classes.show', compact('class'));
     }
 }

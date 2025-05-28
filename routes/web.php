@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\ClassScheduleController;
+use App\Http\Controllers\GymClassController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipPlanController;
 use App\Http\Controllers\PermissionController;
@@ -43,7 +45,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('specialties',SpecialtyController::class);
 	Route::resource('members',MemberController::class);
 	Route::resource('membership-plans',MembershipPlanController::class);
-
+	Route::resource('classes',GymClassController::class);
+	Route::resource('class-schedules', ClassScheduleController::class);
 
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');

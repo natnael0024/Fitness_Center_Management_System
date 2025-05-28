@@ -23263,13 +23263,18 @@ p {
   color: #fff !important;
 }
 .dark-version .sidenav.bg-white {
-  background: #fff !important;
+  /* background: #fff !important; */
+  background: #051139 !important;
 }
 .dark-version .sidenav.bg-white .navbar-nav .nav-link.active:after {
   color: rgba(206, 212, 218, 0.7);
 }
+.dark-version .sidenav.bg-white .navbar-nav .nav-link.active {
+  color: #fff;
+  background-color: #243361c3;
+}
 .dark-version .sidenav.bg-white .collapse .nav-item .nav-link:not(.active) i {
-  color: #344767 !important;
+  /* color: #344767 !important; */
 }
 .dark-version .sidenav.bg-white .collapse .nav-item h6, .dark-version .sidenav.bg-white .collapse .nav-item .h6 {
   color: #344767 !important;

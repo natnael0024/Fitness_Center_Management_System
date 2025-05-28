@@ -54,8 +54,10 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                          #</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Name</th>
-                                        <th class="text-uppercase border text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Gender</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Phone</th>
@@ -74,6 +76,9 @@
                                 <tbody>
                                     @foreach ($members as $index=>$member)
                                     <tr>
+                                        <td class="">
+                                          <p class="text-xs ms-3 font-weight-bold mb-0">{{$index+1}}</p>
+                                        </td>
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
@@ -90,7 +95,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="border">
+                                        <td class="">
                                             <p class="text-xs font-weight-bold mb-0">{{$member->user->gender}}</p>
                                         </td>
                                         <td>
@@ -100,7 +105,7 @@
                                           <p class="text-xs font-weight-bold mb-0">{{$member->membershipPlan->name}}</p>
                                         </td>
                                         <td class="align-middle text-center text-sm ">
-                                            @if ($member->status)
+                                            @if ($member->user->status)
                                             <span class="badge badge-sm bg-gradient-success">
                                                  Active
                                             </span>
@@ -134,57 +139,55 @@
                                                     <h3 class="font-weight-bolder text-dark">Edit User</h3>
                                                   </div>
                                                   <div class="card-body">
-                                                    <form action="{{route('users.update',$member->id)}}" enctype="multipart/form-data" method="post" role="form text-left">
-                                                      @method("POST")
+                                                    <form action="{{route('members.update',$member->id)}}" enctype="multipart/form-data" method="post" role="form text-left">
+                                                      @method("PUT")
                                                       @csrf
-                                                          {{-- Avatar Upload --}}
-                                                          <div class="form-group">
-                                                            <label for="avatar" class="form-label">Avatar <span class="text-danger">*</span></label>
-                                                          
                                                             {{-- Avatar Upload Box --}}
-                                                            <div class="avatar-upload-box position-relative" onclick="document.getElementById('avatar{{ $member->id }}').click();">
-                                                              <img
-                                                                id="avatar-preview{{ $member->id }}"
-                                                                src="{{ $member->user->getAvatarUrlAttribute() }}"
-                                                                alt="Avatar Preview"
-                                                                class="avatar-preview"
-                                                                style="{{ $member->avatar ? '' : 'display: none;' }}"
-                                                              >
-                                                          
-                                                              {{-- Plus or Edit icon --}}
-                                                              <div id="avatar-placeholder{{ $member->id }}" class="avatar-placeholder text-primary">
-                                                                <i class="fas {{ $member->avatar ? 'fa-pen bg-opacity-25' : 'fa-plus' }}"></i>
+                                                            <div class="form-group">
+                                                              <label for="avatar" class="form-label">Avatar <span class="text-danger">*</span></label>
+                                                              <div class="avatar-upload-box position-relative" onclick="document.getElementById('avatar{{ $member->id }}').click();">
+                                                                <img
+                                                                  id="avatar-preview{{ $member->id }}"
+                                                                  src="{{$member->user->getAvatarUrlAttribute()}}"
+                                                                  alt="Avatar Preview"
+                                                                  class="avatar-preview"
+                                                                  style="{{ $member->user->avatar ? '' : 'display: none;' }}"
+                                                                >
+                                                            
+                                                                {{-- Plus or Edit icon --}}
+                                                                <div id="avatar-placeholder{{ $member->id }}" class="avatar-placeholder text-primary">
+                                                                  <i class="fas {{ $member->user->avatar ? 'fa-pen bg-opacity-25' : 'fa-plus' }}"></i>
+                                                                </div>
                                                               </div>
+                                                            
+                                                              {{-- Hidden File Input --}}
+                                                              <input
+                                                                type="file"
+                                                                id="avatar{{ $member->id }}" 
+                                                                name="avatar"
+                                                                class="d-none"
+                                                                accept="image/*"
+                                                                onchange="previewAvatarEdit(event, {{ $member->id }})"
+                                                              >
                                                             </div>
-                                                          
-                                                            {{-- Hidden File Input --}}
-                                                            <input
-                                                              type="file"
-                                                              id="avatar{{ $member->id }}" 
-                                                              name="avatar"
-                                                              class="d-none"
-                                                              accept="image/*"
-                                                              onchange="previewAvatar(event, {{ $member->id }})"
-                                                            >
-                                                          </div>
                                                           
                                                           <div class="row">
                                                               <div class=" col-4">
                                                                   <label>Username <span class="text-danger">*</span> </label>
                                                                   <div class="input-group mb-3">
-                                                                    <input type="text" required name="username" value="{{old('username',$member->username)}}"  class="form-control"  placeholder="username" aria-label="permission name" aria-describedby="role name addon">
+                                                                    <input type="text" required name="username" value="{{old('username',$member->user->username)}}"  class="form-control"  placeholder="username" aria-label="permission name" aria-describedby="role name addon">
                                                                   </div>
                                                               </div>
                                                               <div class=" col-4">
                                                                   <label>Email <span class="text-danger">*</span></label>
                                                                   <div class="input-group mb-3">
-                                                                    <input type="email" required name="email"  class="form-control" value="{{old('email',$member->email)}}"  placeholder="email" aria-label="permission name" aria-describedby="role name addon">
+                                                                    <input type="email" required name="email"  class="form-control" value="{{old('email',$member->user->email)}}"  placeholder="email" aria-label="permission name" aria-describedby="role name addon">
                                                                   </div>
                                                               </div>
                                                               <div class=" col-4">
                                                                 <label>Phone <span class="text-danger">*</span></label>
                                                                 <div class="input-group mb-3">
-                                                                  <input type="text" required name="phone"  class="form-control" value="{{old('phone',$member->phone)}}"  placeholder="phone number" aria-label="permission name" aria-describedby="role name addon">
+                                                                  <input type="text" required name="phone"  class="form-control" value="{{old('phone',$member->user->phone)}}"  placeholder="phone number" aria-label="permission name" aria-describedby="role name addon">
                                                                 </div>
                                                             </div>
                                                           </div>
@@ -192,41 +195,49 @@
                                                             <div class="col-md-4">
                                                               <label>First Name</label>
                                                               <div class="input-group mb-3">
-                                                                <input type="text" required name="firstname"  class="form-control" value="{{old('firstname',$member->firstname)}}"  placeholder="first name" aria-label="permission name" aria-describedby="role name addon">
+                                                                <input type="text" required name="firstname"  class="form-control" value="{{old('firstname',$member->user->firstname)}}"  placeholder="first name" aria-label="permission name" aria-describedby="role name addon">
                                                               </div>
                                                             </div>
                                                             <div class="col-md-4">
                                                               <label>Middle Name</label>
                                                               <div class="input-group mb-3">
-                                                                <input type="text" required name="middlename"  class="form-control" value="{{old('middlename',$member->middlename)}}" placeholder="middle name" aria-label="permission name" aria-describedby="role name addon">
+                                                                <input type="text" required name="middlename"  class="form-control" value="{{old('middlename',$member->user->middlename)}}" placeholder="middle name" aria-label="permission name" aria-describedby="role name addon">
                                                               </div>
                                                             </div>
                                                             <div class="col-md-4">
                                                               <label>Last Name</label>
                                                               <div class="input-group mb-3">
-                                                                <input type="text" name="lastname"  class="form-control" value="{{old('lastname',$member->lastname)}}"  placeholder="last name" aria-label="permission name" aria-describedby="role name addon">
+                                                                <input type="text" name="lastname"  class="form-control" value="{{old('lastname',$member->user->lastname)}}"  placeholder="last name" aria-label="permission name" aria-describedby="role name addon">
                                                               </div>
                                                             </div>
                                                           </div>
                                                           {{-- Role Field --}}
-                                                          {{-- <div class="row">
+                                                          <div class="row">
                                                             <div class="form-group col-md-4">
-                                                              <label for="roleSelect{{ $member->id }}">Role <span class="text-danger">*</span></label>
-                                                              <select name="role" class="form-control role-select" required id="roleSelect{{ $member->id }}" data-user-id="{{ $member->id }}">
-                                                                <option value="">Assign role</option>
-                                                                @foreach ($roles as $role)
-                                                                  <option value="{{ $role->name }}" {{ $member->getRoleNames()->first() == $role->name ? 'selected' : '' }}>
-                                                                    {{ $role->name }}
+                                                              <label for="">Gender<span class="text-danger">*</span></label>
+                                                              <select name="gender" class="form-control" required id="">
+                                                                <option value="">Select Gender</option>
+                                                                  <option value="male" @if($member->user->gender == 'male') selected @endif >Male</option>
+                                                                  <option value="female" @if($member->user->gender == 'female') selected @endif >Female</option>
+                                                              </select>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                              <label for="membership{{ $member->id }}">Membership Plan <span class="text-danger">*</span></label>
+                                                              <select name="membership_plan_id" class="form-control role-select" required id="membership{{ $member->id }}" data-user-id="{{ $member->id }}">
+                                                                <option value="">Select Plan</option>
+                                                                @foreach ($membershipPlans as $plan)
+                                                                  <option value="{{ $plan->id }}" {{ $member->membership_plan_id == $plan->id ? 'selected' : '' }}>
+                                                                    {{ $plan->name }}
                                                                   </option>
                                                                 @endforeach
                                                               </select>
-                                                            </div> --}}
+                                                            </div>
                                                             
                                                             {{-- Branch Field --}}
-                                                            <div class="form-group branch-field col-md-4" id="branchField{{ $member->id }}" style="display: none;">
+                                                            <div class="form-group branch-field col-md-4" id="" >
                                                               <label for="branchSelect{{ $member->id }}">Branch</label>
                                                               <select name="branch_id" class="form-control" id="branchSelect{{ $member->id }}">
-                                                                <option value="">Assign Branch</option>
+                                                                <option value="">Choose Branch</option>
                                                                 @foreach ($branches as $branch)
                                                                   <option value="{{ $branch->id }}" @if($member->branch_id == $branch->id) selected @endif >
                                                                     {{ $branch->name }}
@@ -234,6 +245,15 @@
                                                                 @endforeach
                                                               </select>
                                                             </div>
+                                                          </div>
+                                                          <div class="form-group branch-field col-md-4" id="" >
+                                                            <label for="">Status</label>
+                                                            <select name="status" class="form-control" id="">
+                                                              @foreach ($branches as $branch)
+                                                                <option value="1" {{$member->user->status ? 'selected' :''}}>Active</option>
+                                                                <option value="0" {{!$member->user->status ? 'selected':''}}>InActive</option>
+                                                              @endforeach
+                                                            </select>
                                                           </div>
 
                                                           {{-- Specialties Field (Trainer Only) --}}
@@ -523,9 +543,9 @@
 </style>
 
 
-{{-- <script>
+<script>
   // edit
-  function previewAvatar(event, userId) {
+  function previewAvatarEdit(event, userId) {
     const input = event.target;
     const preview = document.getElementById('avatar-preview' + userId);
     const placeholder = document.getElementById('avatar-placeholder' + userId);
@@ -542,7 +562,7 @@
       reader.readAsDataURL(input.files[0]);
     }
   }
-</script> --}}
+</script>
 
 
 

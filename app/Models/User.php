@@ -34,7 +34,8 @@ class User extends Authenticatable
         'country',
         'postal',
         'about',
-        'avatar'
+        'avatar',
+        'status'
     ];
 
     /**
