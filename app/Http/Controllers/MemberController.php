@@ -8,6 +8,7 @@ use App\Models\MembershipPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
@@ -93,28 +94,50 @@ class MemberController extends Controller
         return view('members.edit', compact('member', 'plans'));
     }
 
-    public function update(Request $request, Member $member)
+    public function update(Request $request,$id)
     {
-        $request->validate([
-            'name'              => 'required|string|max:255',
-            'email'             => 'required|email|unique:users,email,' . $member->user_id,
-            'password'          => 'nullable|string|min:6|confirmed',
-            'membership_plan_id'=> 'nullable|exists:membership_plans,id',
-            'branch_id'         => 'required|exists:branches,id',
-        ]);
-
         try {
+            $member = Member::findOrFail($id);
+            $request->validate([
+                'username' => 'required|max:255|min:2',
+                'firstname' => 'required|max:255|min:2',
+                'middlename' => 'required|max:255|min:2',
+                'lastname' => 'required|max:255|min:2',
+                'gender' => 'required',
+                'phone' => 'nullable',
+                'email'             => 'required|email|unique:users,email,' . $member->user_id,
+                'password'          => 'nullable|string|min:6|confirmed',
+                'membership_plan_id'=> 'nullable|exists:membership_plans,id',
+                'branch_id'         => 'required|exists:branches,id',
+            ]);
+
             DB::beginTransaction();
 
+            if(request()->hasFile('avatar')){
+                $avatarName = request()->file('avatar')->store('avatars', 'public');
+                $request->avatarName = 'storage/'.$avatarName;
+                Storage::disk('public')->delete(str_replace('storage/', '', $member->user->avatar));
+            }
+            // dd($request->status == '0');
+            $status = !$request->status == '0';
+            // dd($status);
             $member->user->update([
-                'name'  => $request->name,
-                'email' => $request->email,
+                'username'     => $request->username,
+                'firstname'     => $request->firstname,
+                'middlename'     => $request->middlename,
+                'lastname'     => $request->lastname,
+                'gender'     => $request->gender,
+                'email'     => $request->email,
+                'phone'     => $request->phone,
                 'password' => $request->password ? Hash::make($request->password) : $member->user->password,
+                'avatar' => $request->avatarName ? $request->avatarName : $member->user->avatar,
+                'status'            => $request->status == '0' ? false : true,
             ]);
 
             $member->update([
                 'membership_plan_id' => $request->membership_plan_id,
                 'branch_id'          => $request->branch_id,
+                'height' => $request->height
             ]);
 
             DB::commit();

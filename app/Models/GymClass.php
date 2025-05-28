@@ -9,7 +9,7 @@ class GymClass extends Model
 
     protected $fillable = [
         'title', 'description', 'trainer_id', 'branch_id',
-        'capacity', 'is_premium', 'price',
+        'capacity', 'is_premium', 'price', 'status'
     ];
 
     public function trainer()

@@ -254,7 +254,7 @@ class UserController extends Controller
                         'user_id'   => $user->id,
                         'branch_id' => $attributes['branch_id'] ?? null,
                     ]);
-                    dd($attributes['specialties']);
+                    // dd($attributes['specialties']);
                     if (!empty($attributes['specialties'])) {
                         $trainer->specialties()->sync($attributes['specialties']);
                     }
