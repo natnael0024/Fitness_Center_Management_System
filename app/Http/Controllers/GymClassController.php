@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\ClassSchedule;
 use App\Models\GymClass;
 use App\Models\Trainer;
 use App\Models\Branch;
@@ -64,10 +65,9 @@ class GymClassController extends Controller
                 'trainer_id'  => 'required|exists:trainers,id',
                 'branch_id'   => 'required|exists:branches,id',
                 'capacity'    => 'integer|min:1',
-                'is_premium'  => 'boolean',
                 'price'       => 'nullable|numeric|min:0',
             ]);
-            $request->is_premium = $request->is_premium == 'on' ? true : false;
+            $request['is_premium'] = $request->is_premium == 'on' ? true : false;
             $class->update($request->all());
             toastr()->success('Class updated successfully');
             return redirect()->route('classes.index');
@@ -89,8 +89,14 @@ class GymClassController extends Controller
         return redirect()->route('classes.index');
     }
 
-    public function show(GymClass $class)
+    public function show($id)
     {
-        return view('classes.show', compact('class'));
+        try {
+            $class = GymClass::findOrFail($id);
+            $schedules = ClassSchedule::where('class_id',$class->id)->paginate();
+            return view('pages.classes.show', compact('class','schedules'));
+        } catch (\Throwable $th) {
+            toastr()->error('Failed to fetch class schedules : ' . $th->getMessage());
+        }
     }
 }

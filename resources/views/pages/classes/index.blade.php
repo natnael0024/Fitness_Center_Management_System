@@ -125,7 +125,7 @@
                                                 <span>Delete</span>
                                             </a>
                                             <a class="font-weight-bold text-xs btn bg-gradient-info  " style="cursor: pointer"
-                                                data-bs-target="#addmodal" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Add user">
+                                                href="{{route('classes.show2',$class->id)}}">
                                                 <span class="d-flex align-items-center gap-2"><i class="fa-regular fa-calendar"></i>Schedules</span>
                                             </a>
                                         </td>

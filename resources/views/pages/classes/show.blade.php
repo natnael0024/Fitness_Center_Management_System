@@ -8,17 +8,17 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0 ">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h6>Class Schedules</h6>
-                            {{-- <div>
+                            <h6>Class Schedules : <span class="text-primary">{{$class->title}}</span></h6>
+                            <div>
                               <a class="font-weight-bold text-xs btn bg-gradient-success  " style="cursor: pointer"
                                 data-bs-target="#addmodal" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Add user">
-                                <span class="d-flex align-items-center gap-2"><i class="fa-solid fas fa-plus "></i>Add Class</span>
+                                <span class="d-flex align-items-center gap-2"><i class="fa-solid fas fa-plus "></i>Add Schedule</span>
                               </a>
-                              <a class="font-weight-bold text-xs btn bg-gradient-success  " style="cursor: pointer"
+                              {{-- <a class="font-weight-bold text-xs btn bg-gradient-success  " style="cursor: pointer"
                                   data-bs-target="#addmodal" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Add user">
                                   <span class="d-flex align-items-center gap-2"><i class="fa-regular fa-calendar"></i>Schedules</span>
-                              </a>
-                            </div> --}}
+                              </a> --}}
+                            </div>
                         </div>
                         
                         <div class=" row col-md-6">
@@ -35,20 +35,20 @@
                                 </div>
                             </form>
                           </div>
-                          <div class="col-md-6 ">
+                          {{-- <div class="col-md-6 ">
                             <form action="">
                               <div class="col-md-12 d-flex align-items-start gap-2 ">
-                                  <select name="classFilter" class="form-control" id="exampleFormControlSelect1">
-                                      <option value="">-- Class --</option>
-                                    @foreach ($classes as $class)
-                                      <option value="{{$class->id}}">{{$class->title}}</option>
+                                  <select name="roleFilter" class="form-control" id="exampleFormControlSelect1">
+                                      <option value="">Class</option>
+                                    @foreach ($schedules as $schedule)
+                                      <option value="{{$schedule->id}}">{{$schedule->title}}</option>
                                     @endforeach
                                   </select>
                                   <button class="btn text-white bg-primary"><i class="fa-solid fa-filter"></i>
                                   </button>
                               </div>
                             </form>
-                          </div>
+                          </div> --}}
                         </div>
                     </div>
                     
@@ -59,8 +59,6 @@
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             #</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Class</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Branch</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -83,13 +81,10 @@
                                         <td class="">
                                           <p class="text-xs ms-3 font-weight-bold mb-0">{{$index+1}}</p>
                                         </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{$schedule->class->title}}</p>
-                                        </td>
                                         <td class="">
                                             <p class="text-xs font-weight-bold mb-0">{{$schedule->class->branch->name}}</p>
                                         </td>
-                                        <td>
+                                        <td class="align-middle text-center  text-sm ">
                                             @if ($schedule->weekday == 1)
                                                 <p class="text-xs font-weight-bold mb-0">Ehud</p>
                                             @elseif($schedule->weekday == 2)
@@ -107,22 +102,15 @@
                                             @endif
                                         </td>
                                         <td class="">
-                                          <p class="text-xs text-center font-weight-bold mb-0 ">{{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->start_time)->format('h:i A') }}</p>
+                                            <p class="text-xs text-center font-weight-bold mb-0 ">
+                                              {{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->start_time)->format('h:i A') }}
+                                            </p>
                                         </td>
                                         <td class="">
-                                            <p class="text-xs text-center font-weight-bold mb-0 ">{{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->end_time)->format('h:i A') }}</p>
-                                        </td>
-                                        {{-- <td class="align-middle text-center  text-sm ">
-                                            @if ($schedule->is_premium)
-                                            <span class="">
-                                                <i class="ni ni-check-bold text-success"></i>
-                                            </span>
-                                            @else
-                                            <span class="">
-                                                <i class="ni ni-fat-remove text-secondary"></i>
-                                            </span>
-                                            @endif
-                                        </td> --}}
+                                            <p class="text-xs text-center font-weight-bold mb-0 ">
+                                                {{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->end_time)->format('h:i A') }}
+                                            </p>
+                                          </td>
                                         <td class="  align-items-center justify-content-center d-flex gap-4">
                                             <a class="font-weight-bold text-xs btn bg-gradient-secondary  " style="cursor: pointer"
                                                 data-bs-target="#editmodal{{$schedule->id}}" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Edit user">
@@ -134,7 +122,6 @@
                                                 <span>Delete</span>
                                             </a>
                                         </td>
-                                          
                                       </div>
 
                                         {{-- delete --}}
@@ -172,7 +159,66 @@
                             <div class="flex justify-center mt-4">
                                 {{ $schedules->links('components.pagination') }}
                             </div>
-                            
+
+                            {{-- add --}}
+                            <div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                      <div class="card card-plain">
+                                        <div class="card-header pb-0 text-left">
+                                          <h3 class="font-weight-bolder text-dark">Add Class</h3>
+                                          <p>Select Days and Enter Start/End Times</p>
+                                        </div>
+                                        <div class="card-body">
+                                          <form action="{{route('class-schedules.store')}}" enctype="multipart/form-data" method="post" role="form text-left">
+                                            @method("POST")
+                                            @csrf
+                                                <input type="hidden" name="class_id" value="{{$class->id}}" id="">
+                                                <div class="row">
+                                                    @php
+                                                        $days = [
+                                                            1 => 'Sunday',
+                                                            2 => 'Monday',
+                                                            3 => 'Tuesday',
+                                                            4 => 'Wednesday',
+                                                            5 => 'Thursday',
+                                                            6 => 'Friday',
+                                                            7 => 'Saturday',
+                                                        ];
+                                                    @endphp
+
+                                                    @foreach ($days as $dayValue => $dayName)
+                                                        <div class="">
+                                                            <label class=" custom-checkbox-wrapper text-md ">
+                                                                <input class="custom-checkbox" type="checkbox" name="days[{{ $dayValue }}][active]" value="1"
+                                                                       onchange="toggleTimeInputs(this, '{{ $dayValue }}')">
+                                                                {{ $dayName }}
+                                                            </label>
+                                                            <div id="time-inputs-{{ $dayValue }}" style="display: none; margin-left: 20px;">
+                                                                <label>
+                                                                    Start Time:
+                                                                    <input class="form-control" type="time" name="days[{{ $dayValue }}][start]">
+                                                                </label>
+                                                                <label>
+                                                                    End Time:
+                                                                    <input class="form-control" type="time" name="days[{{ $dayValue }}][end]">
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="submit" class="btn btn-round bg-primary text-white ">Add</button>
+                                                  <button type="reset" data-bs-dismiss="modal" class="btn btn-round bg-secondary text-white ">Cancel</button>
+                                                </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
                             
                         </div>
                     </div>
@@ -182,56 +228,11 @@
         @include('layouts.footers.auth.footer')
     </div>
 
-    {{-- CSS Styling --}}
-
 <style>
-  .avatar-upload-box {
-    width: 150px;
-    height: 150px;
-    border: 2px dashed #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-  }
-
-  .avatar-upload-box:hover {
-    background-color: #e9ecef;
-  }
-
-  .avatar-preview {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .avatar-placeholder {
-    color: #aaa;
-    font-size: 2rem;
-    z-index: 1;
-    text-align: center;
-  }
-
-  .avatar-upload-box .avatar-placeholder {
-    position: absolute;
-  }
-
-  #preview, #video {
-            width: 300px;
-            height: 225px;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-  }
-
-  /* Wrapper styling (optional) */
 .custom-checkbox-wrapper {
   display: flex;
   align-items: center;
+  width: fit-content;
   gap: 0.5rem;
   font-family: sans-serif;
 }
@@ -253,8 +254,8 @@
 /* Checked state */
 .custom-checkbox:checked {
   /* background-color: #0d6efd;  */
-  background-color: #fddd0d; 
-  border-color: #b8a608;
+  background-color: #0d65fd; 
+  border-color: #1068ffcf;
 }
 
 /* Checkmark (using ::after) */
@@ -265,7 +266,7 @@
   left: 6px;
   width: 4px;
   height: 8px;
-  border: solid rgb(57, 51, 0);
+  border: solid #ffffff;
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
@@ -285,31 +286,13 @@
 
 </style>
 
-
 <script>
-  // edit
-  function previewAvatarEdit(event, userId) {
-    const input = event.target;
-    const preview = document.getElementById('avatar-preview' + userId);
-    const placeholder = document.getElementById('avatar-placeholder' + userId);
-
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-
-      reader.onload = function(e) {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-        placeholder.innerHTML = '<i class="fas fa-pen"></i>';
-      }
-
-      reader.readAsDataURL(input.files[0]);
+    function toggleTimeInputs(checkbox, day) {
+        const container = document.getElementById('time-inputs-' + day);
+        container.style.display = checkbox.checked ? 'block' : 'none';
     }
-  }
 </script>
 
-
-
-     
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const element = document.getElementById('choices-multiple-remove-button');
@@ -325,76 +308,6 @@
     new Choices(element, {
       removeItemButton: true
     });
-  });
-</script>
-
-{{-- JS for Preview --}}
-<script>
-  function previewAvatar(event) {
-    const input = event.target;
-    const preview = document.getElementById('avatar-preview');
-    const placeholder = document.getElementById('avatar-placeholder');
-
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-
-      reader.onload = function(e) {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-        placeholder.style.display = 'none';
-      }
-
-      reader.readAsDataURL(input.files[0]);
-    } else {
-      preview.style.display = 'none';
-      placeholder.style.display = 'flex';
-    }
-  }
-</script>
-
-
-<script>
-  const video = document.getElementById('video');
-  const captureBtn = document.getElementById('capture');
-  const preview = document.getElementById('preview');
-  const imageDataInput = document.getElementById('imageData');
-  const fileInput = document.getElementById('fileInput');
-
-  // 1. Start webcam stream
-  navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-          video.srcObject = stream;
-      })
-      .catch(err => {
-          console.error('Camera access denied or not available:', err);
-      });
-
-  // 2. Capture image from webcam
-  captureBtn.addEventListener('click', () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/png');
-
-      preview.src = dataUrl;
-      preview.style.display = 'block';
-      imageDataInput.value = dataUrl;
-  });
-
-  // 3. Handle file input (preview and strip webcam image)
-  fileInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-              preview.src = e.target.result;
-              preview.style.display = 'block';
-              imageDataInput.value = e.target.result;
-          }
-          reader.readAsDataURL(file);
-      }
   });
 </script>
 @endsection

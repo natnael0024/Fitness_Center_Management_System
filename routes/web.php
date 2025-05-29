@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('specialties',SpecialtyController::class);
 	Route::resource('members',MemberController::class);
 	Route::resource('membership-plans',MembershipPlanController::class);
+	Route::get('classes-{id}',[GymClassController::class,'show'])->name('classes.show2');
 	Route::resource('classes',GymClassController::class);
 	Route::resource('class-schedules', ClassScheduleController::class);
 
