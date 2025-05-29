@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 use App\Models\ClassSchedule;
 use App\Models\GymClass;
 use Illuminate\Http\Request;
+use Validator;
 
 class ClassScheduleController extends Controller
 {
     public function index()
     {
-        $schedules = ClassSchedule::with('class')->paginate(10);
+        $classFilter = request()->input('classFilter');
+        $schedules = ClassSchedule::with('class');
+        if($classFilter){
+            $schedules->where('class_id',$classFilter);
+        }
+        $schedules = $schedules->paginate(10);
         $classes = GymClass::orderBy('title')->get();
         return view('pages.classes.schedules', compact('schedules','classes'));
     }
@@ -21,24 +27,64 @@ class ClassScheduleController extends Controller
         return view('class_schedules.create', compact('classes', 'weekdays'));
     }
 
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'class_id'   => 'required|exists:classes,id',
+    //         'weekday'    => 'required|in:1,2,3,4,5,6,7',
+    //         'start_time' => 'required|date_format:H:i',
+    //         'end_time'   => 'required|date_format:H:i|after:start_time',
+    //     ]);
+
+    //     try {
+    //         ClassSchedule::create($request->all());
+    //         toastr()->success('Class schedule created successfully');
+    //         return redirect()->route('class-schedules.index');
+    //     } catch (\Throwable $e) {
+    //         toastr()->error('Failed to create schedule: ' . $e->getMessage());
+    //         return back()->withInput();
+    //     }
+    // }
+    
     public function store(Request $request)
     {
-        $request->validate([
-            'class_id'   => 'required|exists:classes,id',
-            'weekday'    => 'required|in:1,2,3,4,5,6,7',
-            'start_time' => 'required|date_format:H:i',
-            'end_time'   => 'required|date_format:H:i|after:start_time',
-        ]);
-
         try {
-            ClassSchedule::create($request->all());
+            // dd($request);
+            $request->validate([
+                'class_id' => 'required|exists:classes,id',
+                'days'     => 'required|array',
+            ]);
+
+            $validatedSchedules = [];
+
+            foreach ($request->input('days') as $day => $data) {
+                if (isset($data['active'])) {
+                    $dayData = Validator::make($data, [
+                        'start' => 'required|date_format:H:i',
+                        'end'   => 'required|date_format:H:i|after:start',
+                    ])->validate();
+
+                    $validatedSchedules[] = [
+                        'class_id'   => $request->input('class_id'),
+                        'weekday'    => (int)$day,
+                        'start_time' => $dayData['start'],
+                        'end_time'   => $dayData['end'],
+                    ];
+                }
+            }
+
+            foreach ($validatedSchedules as $schedule) {
+                ClassSchedule::create($schedule);
+            }
+
             toastr()->success('Class schedule created successfully');
-            return redirect()->route('class-schedules.index');
+            return redirect()->back();
         } catch (\Throwable $e) {
             toastr()->error('Failed to create schedule: ' . $e->getMessage());
             return back()->withInput();
         }
     }
+
 
     public function edit(ClassSchedule $classSchedule)
     {
@@ -78,8 +124,9 @@ class ClassScheduleController extends Controller
         return redirect()->route('class-schedules.index');
     }
 
-    public function show(ClassSchedule $classSchedule)
+    public function show($id)
     {
+        $classSchedule = ClassSchedule::findOrFail($id);
         return view('class_schedules.show', compact('classSchedule'));
     }
 

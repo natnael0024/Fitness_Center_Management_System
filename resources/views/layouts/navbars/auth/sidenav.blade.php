@@ -115,7 +115,7 @@
                 <a class="nav-link {{ str_contains(request()->url(), 'classes') == true ? 'active' : '' }}" href="{{ route('classes.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-dumbbell text-sm opacity-10"></i>
+                        <i class="fas fa-dumbbell text-sm text-primary"></i>
                     </div>
                     <span class="nav-link-text ms-1">Classes</span>
                 </a>
