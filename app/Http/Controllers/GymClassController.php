@@ -93,8 +93,9 @@ class GymClassController extends Controller
     {
         try {
             $class = GymClass::findOrFail($id);
-            $schedules = ClassSchedule::where('class_id',$class->id)->paginate();
-            return view('pages.classes.show', compact('class','schedules'));
+            $schedules = ClassSchedule::where('class_id',$class->id)->paginate(10);
+            $groupedSchedules = $schedules->groupBy('weekday');
+            return view('pages.classes.show', compact('class','schedules','groupedSchedules'));
         } catch (\Throwable $th) {
             toastr()->error('Failed to fetch class schedules : ' . $th->getMessage());
         }

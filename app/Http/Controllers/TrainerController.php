@@ -44,7 +44,7 @@ class TrainerController extends Controller
     
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
         try {
             $validated = $request->validate([
                 'username'          => 'required|string|max:255',

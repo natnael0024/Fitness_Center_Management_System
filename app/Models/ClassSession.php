@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class ClassSession extends Model
 {
     protected $fillable = [
-        'class_id', 'date', 'start_time', 'end_time',
-        'is_cancelled', 'notes',
+        'class_schedule_id', 'date', 'status', 'notes',
     ];
 
-    public function class()
+    public function schedule()
     {
-        return $this->belongsTo(GymClass::class, 'class_id');
+        return $this->belongsTo(ClassSchedule::class);
     }
 
     public function enrollments()

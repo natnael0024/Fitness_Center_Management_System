@@ -24,7 +24,7 @@ class GymClass extends Model
 
     public function schedules()
     {
-        return $this->hasMany(ClassSchedule::class);
+        return $this->hasMany(ClassSchedule::class,'class_id','id');
     }
 
     public function sessions()
