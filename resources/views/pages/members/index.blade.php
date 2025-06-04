@@ -610,7 +610,7 @@
 </script>
 
 
-<script>
+{{-- <script>
   const video = document.getElementById('video');
   const captureBtn = document.getElementById('capture');
   const preview = document.getElementById('preview');
@@ -653,5 +653,5 @@
           reader.readAsDataURL(file);
       }
   });
-</script>
+</script> --}}
 @endsection

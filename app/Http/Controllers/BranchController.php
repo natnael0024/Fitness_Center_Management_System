@@ -44,7 +44,6 @@ class BranchController extends Controller
                 'name' => 'required|string|max:255',
                 'address' => 'nullable|string|max:255',
                 'phone' => 'nullable|string|max:20',
-                'manager_id' => 'nullable|integer|exists:users,id',
                 'status' => 'boolean',
             ]);
 

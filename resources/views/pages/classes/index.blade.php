@@ -14,9 +14,9 @@
                                 data-bs-target="#addmodal" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Add user">
                                 <span class="d-flex align-items-center gap-2"><i class="fa-solid fas fa-plus "></i>Add Class</span>
                               </a>
-                              <a class="font-weight-bold text-xs btn bg-gradient-success  " style="cursor: pointer"
+                              <a class="font-weight-bold text-xs btn bg-gradient-primary  " style="cursor: pointer"
                                   href="{{route('class-schedules.index')}}">
-                                  <span class="d-flex align-items-center gap-2"><i class="fa-regular fa-calendar"></i>Schedules</span>
+                                  <span class="d-flex align-items-center gap-2"><i class="fa-regular fa-calendar"></i>All Schedules</span>
                               </a>
                             </div>
                         </div>
@@ -126,7 +126,7 @@
                                             </a>
                                             <a class="font-weight-bold text-xs btn bg-gradient-info  " style="cursor: pointer"
                                                 href="{{route('classes.show2',$class->id)}}">
-                                                <span class="d-flex align-items-center gap-2"><i class="fa-regular fa-calendar"></i>Schedules</span>
+                                                <span class="d-flex align-items-center gap-2"><i class="fa-regular fa-calendar"></i>Schedule</span>
                                             </a>
                                         </td>
                                          {{-- edit --}}
@@ -498,49 +498,4 @@
   }
 </script>
 
-
-<script>
-  const video = document.getElementById('video');
-  const captureBtn = document.getElementById('capture');
-  const preview = document.getElementById('preview');
-  const imageDataInput = document.getElementById('imageData');
-  const fileInput = document.getElementById('fileInput');
-
-  // 1. Start webcam stream
-  navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-          video.srcObject = stream;
-      })
-      .catch(err => {
-          console.error('Camera access denied or not available:', err);
-      });
-
-  // 2. Capture image from webcam
-  captureBtn.addEventListener('click', () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/png');
-
-      preview.src = dataUrl;
-      preview.style.display = 'block';
-      imageDataInput.value = dataUrl;
-  });
-
-  // 3. Handle file input (preview and strip webcam image)
-  fileInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-              preview.src = e.target.result;
-              preview.style.display = 'block';
-              imageDataInput.value = e.target.result;
-          }
-          reader.readAsDataURL(file);
-      }
-  });
-</script>
 @endsection

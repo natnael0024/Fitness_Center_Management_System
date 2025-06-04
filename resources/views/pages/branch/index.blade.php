@@ -195,15 +195,15 @@
                                             @csrf
                                                 <div class="row">
                                                     <div class=" col-6">
-                                                        <label>Name <span class="text-danger">*</span> </label>
+                                                        <label>Branch Name <span class="text-danger">*</span> </label>
                                                         <div class="input-group mb-3">
-                                                          <input type="text" required name="name"  class="form-control"  placeholder="name" aria-label="permission name" aria-describedby="role name addon">
+                                                          <input type="text" required name="name"  class="form-control"  placeholder="branch name" aria-label="permission name" aria-describedby="role name addon">
                                                         </div>
                                                     </div>
                                                     <div class=" col-6">
                                                         <label>Address <span class="text-danger">*</span></label>
                                                         <div class="input-group mb-3">
-                                                          <input type="text" required name="address"  class="form-control"  placeholder="email" aria-label="permission name" aria-describedby="role name addon">
+                                                          <input type="text" required name="address"  class="form-control"  placeholder="addess" aria-label="permission name" aria-describedby="role name addon">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -211,10 +211,10 @@
                                                     <div class="col-4">
                                                         <label>Phone</label>
                                                         <div class="input-group mb-3">
-                                                          <input type="text" required name="phone"  class="form-control"  placeholder="first name" aria-label="permission name" aria-describedby="role name addon">
+                                                          <input type="text" required name="phone"  class="form-control"  placeholder="phone" aria-label="permission name" aria-describedby="role name addon">
                                                         </div>
                                                     </div>
-                                                    <div class="col-4">
+                                                    {{-- <div class="col-4">
                                                         <label>Manager</label>
                                                         <select name="role" class="form-control" required id="exampleFormControlSelect1">
                                                             <option value="">Assign BM</option>
@@ -222,7 +222,7 @@
                                                             <option value="{{$bm->id}}">{{$bm->firstname . ' '.$bm->lastname}}</option>
                                                           @endforeach
                                                         </select>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                                 <div class="modal-footer">
                                                   <button type="submit" class="btn btn-round bg-primary text-white ">Add</button>

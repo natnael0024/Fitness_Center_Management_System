@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('class_schedules', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('class_id')->constrained('classes')->onDelete('cascade');
-            $table->unsignedTinyInteger('weekday'); // 0 = Sunday, 6 = Saturday
+            $table->unsignedTinyInteger('weekday'); // 1 = Sunday, 7 = Saturday
             $table->time('start_time');
             $table->time('end_time');
             $table->timestamps();
         });
-        
     }
 
     /**

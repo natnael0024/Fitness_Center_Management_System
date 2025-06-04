@@ -20,7 +20,8 @@ return new class extends Migration
             $table->bigInteger( 'branch_id')->nullable();
             $table->integer( 'capacity')->nullable();
             $table->decimal( 'price',8,2)->nullable();
-            $table->boolean( 'status')->nullable();
+            $table->boolean( 'status')->default(true);
+            $table->boolean('is_premium')->default(false)->change();
             $table->timestamps();
         });
     }

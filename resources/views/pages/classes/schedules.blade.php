@@ -20,7 +20,6 @@
                               </a>
                             </div> --}}
                         </div>
-                        
                         <div class=" row col-md-6">
                           <div class="col-md-6 ">
                             <form action="">
@@ -35,16 +34,33 @@
                                 </div>
                             </form>
                           </div>
-                          <div class="col-md-6 ">
+                          <div class="col-md-6">
                             <form action="">
                               <div class="col-md-12 d-flex align-items-start gap-2 ">
-                                  <select name="classFilter" class="form-control" id="exampleFormControlSelect1">
-                                      <option value="">-- Class --</option>
+                                  <select name="classFilter" class="form-select col-md-2">
+                                    <option value="">-- Filter by Class --</option>
                                     @foreach ($classes as $class)
-                                      <option value="{{$class->id}}">{{$class->title}}</option>
+                                        <option value="{{ $class->id }}" {{ request('classFilter') == $class->id ? 'selected' : '' }}>
+                                            {{ $class->title }}
+                                        </option>
                                     @endforeach
                                   </select>
-                                  <button class="btn text-white bg-primary"><i class="fa-solid fa-filter"></i>
+                                  <select name="branchFilter" class="form-select col-md-3">
+                                    <option value="">-- Filter by Branch --</option>
+                                    @foreach ($branches as $branch)
+                                        <option value="{{ $branch->id }}" {{ request('branchFilter') == $branch->id ? 'selected' : '' }}>
+                                            {{ $branch->name }}
+                                        </option>
+                                    @endforeach
+                                  </select>
+                                  <div class="col-md-6">
+                                    <input type="time" name="startTime" value="{{ request('startTime') }}" class="form-control" placeholder="Start Time">
+                                  </div>
+                                  <div class="col-md-6">
+                                      <input type="time" name="endTime" value="{{ request('endTime') }}" class="form-control" placeholder="End Time">
+                                  </div>
+                                  <button class="btn text-white bg-primary">
+                                    <i class="fa-solid fa-filter"></i>
                                   </button>
                               </div>
                             </form>
@@ -54,7 +70,7 @@
                     
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
+                            {{-- <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -71,9 +87,6 @@
                                             End Time</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Action</th>
-                                        {{-- <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Employed</th> --}}
                                         <th class="text-secondary opacity-7"></th>
                                     </tr>
                                 </thead>
@@ -112,17 +125,6 @@
                                         <td class="">
                                             <p class="text-xs text-center font-weight-bold mb-0 ">{{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->end_time)->format('h:i A') }}</p>
                                         </td>
-                                        {{-- <td class="align-middle text-center  text-sm ">
-                                            @if ($schedule->is_premium)
-                                            <span class="">
-                                                <i class="ni ni-check-bold text-success"></i>
-                                            </span>
-                                            @else
-                                            <span class="">
-                                                <i class="ni ni-fat-remove text-secondary"></i>
-                                            </span>
-                                            @endif
-                                        </td> --}}
                                         <td class="  align-items-center justify-content-center d-flex gap-4">
                                             <a class="font-weight-bold text-xs btn bg-gradient-secondary  " style="cursor: pointer"
                                                 data-bs-target="#editmodal{{$schedule->id}}" data-bs-toggle="modal" data-toggle="tooltip" data-original-title="Edit user">
@@ -135,9 +137,6 @@
                                             </a>
                                         </td>
                                           
-                                      </div>
-
-                                        {{-- delete --}}
                                         <div class="modal fade " id="deletemodal{{$schedule->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered  modal-md" role="document">
                                               <div class="modal-content card card-body  ">
@@ -168,9 +167,53 @@
                                     </tr>
                                     @endforeach
                                 </tbody>
-                            </table>
+                            </table> --}} 
+                            @php
+                                $weekdays = [
+                                    1 => 'Sunday',
+                                    2 => 'Monday',
+                                    3 => 'Tuesday',
+                                    4 => 'Wednesday',
+                                    5 => 'Thursday',
+                                    6 => 'Friday',
+                                    7 => 'Saturday',
+                                ];
+                            @endphp
+                            <div class="container">
+                              <div class="row text-center mb-3 ">
+                                  @foreach ($weekdays as $dayNum => $dayName)
+                                      <div class="col-12 col-sm-6 col-md-3 col-lg-2 col-xl-3 mb-4">
+                                          <div class="border rounded p-3 h-100" style="background-color: #f8f9fa16;">
+                                              <h6 class="text-primary text-uppercase fw-bold mb-3">{{ $dayName }}</h6>
+                                              @if (isset($schedules[$dayNum]))
+                                                  @foreach ($schedules[$dayNum] as $schedule)
+                                                      <div class=" rounded-3 mb-2 shadow-sm bg-gradient-success">
+                                                          <div class="card-body p-2 row">
+                                                              <h6 class="card-title mb-1" style="font-size: 0.85rem; color: white;">
+                                                                  {{ $schedule->class->title }}
+                                                              </h6>
+                                                              <span class="mb-0" style="font-size: 0.75rem; color: white;">
+                                                                  Branch: {{ $schedule->class->branch->name }}
+                                                              </span>
+                                                              <span class="mb-0" style="font-size: 0.9rem; color: white;">
+                                                                  {{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->start_time)->format('h:i A') }}
+                                                                  -
+                                                                  {{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->end_time)->format('h:i A') }}
+                                                              </span>
+                                                          </div>
+                                                      </div>
+                                                  @endforeach
+                                              @else
+                                                  <p class="text-muted" style="font-size: 0.8rem;">No classes</p>
+                                              @endif
+                                          </div>
+                                      </div>
+                                  @endforeach
+                              </div>
+                          </div>
+
                             <div class="flex justify-center mt-4">
-                                {{ $schedules->links('components.pagination') }}
+                                {{-- {{ $schedules->links('components.pagination') }} --}}
                             </div>
                             
                             
